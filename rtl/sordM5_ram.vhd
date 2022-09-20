@@ -45,7 +45,13 @@ port (
    ioctl_dout             : in std_logic_vector( 7 downto 0);
    ioctl_index            : in std_logic_vector( 7 downto 0);
    ioctl_wr               : in std_logic;
-   ioctl_download         : in std_logic
+   ioctl_download         : in std_logic;
+
+   --SRAM
+   SRAM_A			:	 OUT STD_LOGIC_VECTOR(20 DOWNTO 0);
+   SRAM_Q			:	 INOUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+   SRAM_WE			:	 OUT STD_LOGIC
+
   );
 
 end sordM5_rams;
@@ -84,6 +90,21 @@ architecture rtl of sordM5_rams is
      END LOOP;
      RETURN Z;
    END inv; 
+
+   component spram_sram
+        port (
+        clka : in std_logic;
+        ena : in std_logic;
+        wea : in std_logic;
+        addra : in std_logic_vector (17 downto 0);
+        dina : in std_logic_vector (7 downto 0);
+        douta : out std_logic_vector (7 downto 0);
+        SRAM_ADDR : out std_logic_vector (20 downto 0);
+        SRAM_DATA : inout std_logic_vector (15 downto 0);
+        SRAM_WE_n : out std_logic
+      );
+    end component;
+    
    
 begin
 
@@ -186,17 +207,43 @@ begin
    );
 
    ramD1_we_s <= '1' when ramD_cs_s = '1' and mmu_q_s(19 downto 18) = "00" and wr_n_i ='0' else '0';
-   ramD1 : work.spram
-   generic map (
-      addr_width => 18 --18
-   )
+
+   -- Original on BRAM
+
+   -- ramD1 : work.spram
+   -- generic map (
+   --    addr_width => 18 --18
+   -- )
+   -- port map (
+   --    clock => clk_i,
+   --    address => mmu_q_s(17 downto 12)&a_i(11 downto 0),
+   --    wren => ramD1_we_s,
+   --    data => d_i,
+   --    q => ramD1_q_s
+   -- );   
+
+   
+   -- SRAM version
+
+   ramD1 : spram_sram
+   -- generic map (
+   --    AW => 18 
+   -- )
    port map (
-      clock => clk_i,
-      address => mmu_q_s(17 downto 12)&a_i(11 downto 0),
-      wren => ramD1_we_s,
-      data => d_i,
-      q => ramD1_q_s
+      clka => clk_i,
+      ena => '1',
+      addra => mmu_q_s(17 downto 12)&a_i(11 downto 0),
+      wea => ramD1_we_s,
+      dina => d_i,
+      douta => ramD1_q_s,
+
+      SRAM_ADDR		=> SRAM_A,
+      SRAM_DATA		=> SRAM_Q,
+      SRAM_WE_n		=> SRAM_WE
    );   
+
+
+
    
    rom_ioctl_we_s <= '1' when ioctl_index = "00000001" 
                           AND ioctl_wr = '1' 

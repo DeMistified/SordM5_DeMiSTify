@@ -61,7 +61,7 @@ entity sordM5 is
     ioctl_index     : in std_logic_vector( 7 downto 0);
     ioctl_wr        : in std_logic;
     ioctl_download  : in std_logic;
-    casSpeed        : in std_logic
+    casSpeed        : in std_logic;
     -- DDRAM --------------------------------------------------------
     -- DDRAM_CLK       : out std_logic;
     -- DDRAM_BUSY      : in std_logic;
@@ -73,6 +73,12 @@ entity sordM5 is
     -- DDRAM_DIN       : out std_logic_vector( 63 downto 0);
     -- DDRAM_BE        : out std_logic_vector( 7 downto 0);
     -- DDRAM_WE        : out std_logic
+
+    --SRAM
+    SRAM_A			:	 OUT STD_LOGIC_VECTOR(20 DOWNTO 0);
+    SRAM_Q			:	 INOUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SRAM_WE			:	 OUT STD_LOGIC
+
   );
 
 end sordM5;
@@ -405,7 +411,12 @@ begin
       ioctl_dout     => ioctl_dout,
       ioctl_index    => ioctl_index,
       ioctl_wr       => ioctl_wr,
-      ioctl_download => ioctl_download
+      ioctl_download => ioctl_download,
+
+      SRAM_A		=> SRAM_A,
+      SRAM_Q		=> SRAM_Q,
+      SRAM_WE		=> SRAM_WE
+
 	 );
 
  -----------------------------------------------------------------------------
@@ -433,25 +444,25 @@ begin
  -- CAS player
  -----------------------------------------------------------------------------
  
-  tape : work.casPlayer
-    port map (
-    clk_i            => clk_i,
-    reset_n          => reset_n_i,
-    ioctl_addr_i     => ioctl_addr,
-    ioctl_dout_i     => ioctl_dout,
-    ioctl_index_i    => ioctl_index,
-    ioctl_wr_i       => ioctl_wr,
-    ioctl_download_i => ioctl_download,
-    casOut_o         => casOut_s,
-    mem_addr_o       => buff_mem_addr,
-    mem_dout_i       => buff_mem_dout,
-    mem_din_o        => buff_mem_din,
-    mem_wr_o         => buff_mem_wr,
-    mem_rd_o         => buff_mem_rd,
-    mem_ready_i      => buff_mem_ready,
-    casOn_i          => casOn_s,
-    casSpeed_i       => casSpeed
-    );
+  -- tape : work.casPlayer
+  --   port map (
+  --   clk_i            => clk_i,
+  --   reset_n          => reset_n_i,
+  --   ioctl_addr_i     => ioctl_addr,
+  --   ioctl_dout_i     => ioctl_dout,
+  --   ioctl_index_i    => ioctl_index,
+  --   ioctl_wr_i       => ioctl_wr,
+  --   ioctl_download_i => ioctl_download,
+  --   casOut_o         => casOut_s,
+  --   mem_addr_o       => buff_mem_addr,
+  --   mem_dout_i       => buff_mem_dout,
+  --   mem_din_o        => buff_mem_din,
+  --   mem_wr_o         => buff_mem_wr,
+  --   mem_rd_o         => buff_mem_rd,
+  --   mem_ready_i      => buff_mem_ready,
+  --   casOn_i          => casOn_s,
+  --   casSpeed_i       => casSpeed
+  --   );
     
 -----------------------------------------------------------------------------
 -- BUFFER DDRAM

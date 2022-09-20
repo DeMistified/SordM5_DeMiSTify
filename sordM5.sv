@@ -38,6 +38,10 @@ module sordM5_guest
 	output        SDRAM_CLK,
 	output        SDRAM_CKE,
 
+	output [20:0] SRAM_A,
+	inout  [15:0] SRAM_Q,
+	output		  SRAM_WE,
+
 	output        SPI_DO,
 	input         SPI_DI,
 	input         SPI_SCK,
@@ -213,6 +217,11 @@ sordM5 SordM5
 	// .DDRAM_BE ( DDRAM_BE),
 	// .DDRAM_WE ( DDRAM_WE),
 	// .DDRAM_CLK ( DDRAM_CLK),
+
+	.SRAM_A(SRAM_A),
+	.SRAM_Q(SRAM_Q),
+	.SRAM_WE(SRAM_WE),
+
 	.casSpeed (status[9]),
 	.tape_sound_i (status[10]),
 	.ramMode_i (status[8:0])
