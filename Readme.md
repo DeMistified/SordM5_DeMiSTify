@@ -1,4 +1,11 @@
+# [Sord M5](https://en.wikipedia.org/wiki/IBM_Personal_Computer_XT)  [DeMiSTified](https://github.com/robinsonb5/DeMiSTify)
+
+Port DeMiSTified by Somhic from original MiSTer port https://github.com/tdlabac/SordM5_MiSTer
+
+Follows original Readme.
+
 # Sord M5
+
 From Wikipedia, the free encyclopedia
 
 The Sord M5 is a home computer launched by Sord Computer Corporation in 1982. Primarily the Sord M5 competed in the Japanese home computer market. It was also sold as the CGL M5 in the United Kingdom by Computer Games Limited and was reasonably popular in Czechoslovakia, where the M5 stood as one of the first affordable computers available to the general public. Takara also sold models in Japan as the Game M5, and models were also exported to South Korea.

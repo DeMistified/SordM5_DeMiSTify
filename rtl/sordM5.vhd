@@ -61,18 +61,18 @@ entity sordM5 is
     ioctl_index     : in std_logic_vector( 7 downto 0);
     ioctl_wr        : in std_logic;
     ioctl_download  : in std_logic;
-    casSpeed        : in std_logic;
+    casSpeed        : in std_logic
     -- DDRAM --------------------------------------------------------
-    DDRAM_CLK       : out std_logic;
-    DDRAM_BUSY      : in std_logic;
-    DDRAM_BURSTCNT  : out std_logic_vector( 7 downto 0);
-    DDRAM_ADDR      : out std_logic_vector( 28 downto 0);
-    DDRAM_DOUT      : in std_logic_vector( 63 downto 0);
-    DDRAM_DOUT_READY :in std_logic;
-    DDRAM_RD        : out std_logic;
-    DDRAM_DIN       : out std_logic_vector( 63 downto 0);
-    DDRAM_BE        : out std_logic_vector( 7 downto 0);
-    DDRAM_WE        : out std_logic
+    -- DDRAM_CLK       : out std_logic;
+    -- DDRAM_BUSY      : in std_logic;
+    -- DDRAM_BURSTCNT  : out std_logic_vector( 7 downto 0);
+    -- DDRAM_ADDR      : out std_logic_vector( 28 downto 0);
+    -- DDRAM_DOUT      : in std_logic_vector( 63 downto 0);
+    -- DDRAM_DOUT_READY :in std_logic;
+    -- DDRAM_RD        : out std_logic;
+    -- DDRAM_DIN       : out std_logic_vector( 63 downto 0);
+    -- DDRAM_BE        : out std_logic_vector( 7 downto 0);
+    -- DDRAM_WE        : out std_logic
   );
 
 end sordM5;
@@ -157,27 +157,27 @@ architecture struct of sordM5 is
   signal buff_mem_rd      : std_logic;
   signal buff_mem_ready   : std_logic;
   
-  component ddram is
-    port (
-      DDRAM_CLK       : in  std_logic;
-      DDRAM_BUSY      : in  std_logic;
-      DDRAM_BURSTCNT  : out std_logic_vector( 7 downto 0);
-      DDRAM_ADDR      : out std_logic_vector( 28 downto 0);
-      DDRAM_DOUT      : in  std_logic_vector( 63 downto 0);
-      DDRAM_DOUT_READY :in  std_logic;
-      DDRAM_RD        : out std_logic;
-      DDRAM_DIN       : out std_logic_vector( 63 downto 0);
-      DDRAM_BE        : out std_logic_vector( 7 downto 0);
-      DDRAM_WE        : out std_logic;
-      addr            : in  std_logic_vector( 27 downto 0);
-      dout            : out std_logic_vector( 7 downto 0);
-      din             : in  std_logic_vector( 7 downto 0);
-      we              : in  std_logic; 
-      rd              : in  std_logic; 
-      ready           : out std_logic;  
-      reset           : in  std_logic
-    );
-  end component ddram;  
+  -- component ddram is
+  --   port (
+  --     DDRAM_CLK       : in  std_logic;
+  --     DDRAM_BUSY      : in  std_logic;
+  --     DDRAM_BURSTCNT  : out std_logic_vector( 7 downto 0);
+  --     DDRAM_ADDR      : out std_logic_vector( 28 downto 0);
+  --     DDRAM_DOUT      : in  std_logic_vector( 63 downto 0);
+  --     DDRAM_DOUT_READY :in  std_logic;
+  --     DDRAM_RD        : out std_logic;
+  --     DDRAM_DIN       : out std_logic_vector( 63 downto 0);
+  --     DDRAM_BE        : out std_logic_vector( 7 downto 0);
+  --     DDRAM_WE        : out std_logic;
+  --     addr            : in  std_logic_vector( 27 downto 0);
+  --     dout            : out std_logic_vector( 7 downto 0);
+  --     din             : in  std_logic_vector( 7 downto 0);
+  --     we              : in  std_logic; 
+  --     rd              : in  std_logic; 
+  --     ready           : out std_logic;  
+  --     reset           : in  std_logic
+  --   );
+  -- end component ddram;  
 
 begin
 
@@ -457,28 +457,28 @@ begin
 -- BUFFER DDRAM
 -----------------------------------------------------------------------------
 
-  DDRAM_CLK <= clk_i;
+  -- DDRAM_CLK <= clk_i;
   
-  buff : ddram
-    port map (
-      DDRAM_CLK => clk_i,
-      DDRAM_BUSY => DDRAM_BUSY,
-      DDRAM_BURSTCNT => DDRAM_BURSTCNT,
-      DDRAM_ADDR => DDRAM_ADDR,
-      DDRAM_DOUT => DDRAM_DOUT,
-      DDRAM_DOUT_READY => DDRAM_DOUT_READY,
-      DDRAM_RD => DDRAM_RD,
-      DDRAM_DIN => DDRAM_DIN,
-      DDRAM_BE => DDRAM_BE,
-      DDRAM_WE => DDRAM_WE,
-      addr => buff_mem_addr,
-      dout => buff_mem_dout,
-      din => buff_mem_din,
-      we => buff_mem_wr,
-      rd => buff_mem_rd,
-      ready => buff_mem_ready,
-      reset => not reset_n_i
-    ); 
+  -- buff : ddram
+  --   port map (
+  --     DDRAM_CLK => clk_i,
+  --     DDRAM_BUSY => DDRAM_BUSY,
+  --     DDRAM_BURSTCNT => DDRAM_BURSTCNT,
+  --     DDRAM_ADDR => DDRAM_ADDR,
+  --     DDRAM_DOUT => DDRAM_DOUT,
+  --     DDRAM_DOUT_READY => DDRAM_DOUT_READY,
+  --     DDRAM_RD => DDRAM_RD,
+  --     DDRAM_DIN => DDRAM_DIN,
+  --     DDRAM_BE => DDRAM_BE,
+  --     DDRAM_WE => DDRAM_WE,
+  --     addr => buff_mem_addr,
+  --     dout => buff_mem_dout,
+  --     din => buff_mem_din,
+  --     we => buff_mem_wr,
+  --     rd => buff_mem_rd,
+  --     ready => buff_mem_ready,
+  --     reset => not reset_n_i
+  --   ); 
 
   
   end struct;

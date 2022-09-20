@@ -1,19 +1,33 @@
-set_global_assignment -name SDC_FILE sordM5.sdc
-set_global_assignment -name SYSTEMVERILOG_FILE sordM5.sv
-set_global_assignment -name QIP_FILE rtl/T80/T80.qip
-set_global_assignment -name QIP_FILE rtl/vdp18/vdp18.qip
-set_global_assignment -name QIP_FILE rtl/sn76489/sn76489.qip
-set_global_assignment -name VHDL_FILE rtl/Tape/tape.vhd
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/ddram.sv
-set_global_assignment -name VHDL_FILE rtl/CTC/ctc_channel.vhd
-set_global_assignment -name VHDL_FILE rtl/CTC/ctc.vhd
-set_global_assignment -name VHDL_FILE rtl/sordM5.vhd
-set_global_assignment -name VHDL_FILE rtl/keyboard.vhd
-set_global_assignment -name VHDL_FILE rtl/cv_por.vhd
-set_global_assignment -name VHDL_FILE rtl/cv_clock.vhd
-set_global_assignment -name VHDL_FILE rtl/bus_mux.vhd
-set_global_assignment -name VHDL_FILE rtl/bram.vhd
-set_global_assignment -name VHDL_FILE rtl/addr_dec.vhd
-set_global_assignment -name VHDL_FILE rtl/sordM5_ram.vhd
-set_global_assignment -name VHDL_FILE rtl/LIBS/latch.vhd
-set_global_assignment -name VHDL_FILE rtl/addr_ram.vhd
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sordM5.sv]
+set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) rtl/T80/T80.qip]
+set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) rtl/vdp18/vdp18.qip]
+set_global_assignment -name QIP_FILE [file join $::quartus(qip_path) rtl/sn76489/sn76489.qip]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/Tape/tape.vhd]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) rtl/ddram.sv]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/CTC/ctc_channel.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/CTC/ctc.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/sordM5.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/keyboard.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/cv_por.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/cv_clock.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/bus_mux.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/bram.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/addr_dec.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/sordM5_ram.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/LIBS/latch.vhd]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) rtl/addr_ram.vhd]
+
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/video_space.sv]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/video_mixer.sv]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/video_cleaner.sv]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/scandoubler.v]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/rgb2ypbpr.sv]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/osd.v]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/mist_video.v]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/mist_io.v]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/hq2x.sv]
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/data_io.v]
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) sys/dac.vhd]
+set_global_assignment -name SYSTEMVERILOG_FILE [file join $::quartus(qip_path) sys/cofi.sv]
+
+set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) sys/sigma_delta_dac.v]

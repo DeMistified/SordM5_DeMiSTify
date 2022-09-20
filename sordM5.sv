@@ -20,191 +20,56 @@
 //
 //============================================================================
 
-module emu
+module sordM5_guest
 (
-	//Master input clock
-	input         CLK_50M,
+	input         CLOCK_27,
+	input 		  RESET_N,
+	output        LED,                                              
 
-	//Async reset from top-level module.
-	//Can be used as initial reset.
-	input         RESET,
-
-	//Must be passed to hps_io module
-	inout  [45:0] HPS_BUS,
-
-	//Base video clock. Usually equals to CLK_SYS.
-	output        CLK_VIDEO,
-
-	//Multiple resolutions are supported using different CE_PIXEL rates.
-	//Must be based on CLK_VIDEO
-	output        CE_PIXEL,
-
-    //if VIDEO_ARX[12] or VIDEO_ARY[12] is set then [11:0] contains scaled size instead of aspect ratio.
-    output [12:0] VIDEO_ARX,
-    output [12:0] VIDEO_ARY,
-
-	output  [7:0] VGA_R,
-	output  [7:0] VGA_G,
-	output  [7:0] VGA_B,
-	output        VGA_HS,
-	output        VGA_VS,
-	output        VGA_DE,    // = ~(VBlank | HBlank)
-	output        VGA_F1,
-	output [1:0]  VGA_SL,
-	output        VGA_SCALER, // Force VGA scaler
-
-	input  [11:0] HDMI_WIDTH,
-	input  [11:0] HDMI_HEIGHT,
-	output        HDMI_FREEZE,
-
-`ifdef MISTER_FB
-	// Use framebuffer in DDRAM (USE_FB=1 in qsf)
-	// FB_FORMAT:
-	//    [2:0] : 011=8bpp(palette) 100=16bpp 101=24bpp 110=32bpp
-	//    [3]   : 0=16bits 565 1=16bits 1555
-	//    [4]   : 0=RGB  1=BGR (for 16/24/32 modes)
-	//
-	// FB_STRIDE either 0 (rounded to 256 bytes) or multiple of pixel size (in bytes)
-	output        FB_EN,
-	output  [4:0] FB_FORMAT,
-	output [11:0] FB_WIDTH,
-	output [11:0] FB_HEIGHT,
-	output [31:0] FB_BASE,
-	output [13:0] FB_STRIDE,
-	input         FB_VBL,
-	input         FB_LL,
-	output        FB_FORCE_BLANK,
-
-`ifdef MISTER_FB_PALETTE
-	// Palette control for 8bit modes.
-	// Ignored for other video modes.
-	output        FB_PAL_CLK,
-	output  [7:0] FB_PAL_ADDR,
-	output [23:0] FB_PAL_DOUT,
-	input  [23:0] FB_PAL_DIN,
-	output        FB_PAL_WR,
-`endif
-`endif
-
-	output        LED_USER,  // 1 - ON, 0 - OFF.
-
-	// b[1]: 0 - LED status is system status OR'd with b[0]
-	//       1 - LED status is controled solely by b[0]
-	// hint: supply 2'b00 to let the system control the LED.
-	output  [1:0] LED_POWER,
-	output  [1:0] LED_DISK,
-
-	// I/O board button press simulation (active high)
-	// b[1]: user button
-	// b[0]: osd button
-	output  [1:0] BUTTONS,
-
-	input         CLK_AUDIO, // 24.576 MHz
-	output [15:0] AUDIO_L,
-	output [15:0] AUDIO_R,
-	output        AUDIO_S,   // 1 - signed audio samples, 0 - unsigned
-	output  [1:0] AUDIO_MIX, // 0 - no mix, 1 - 25%, 2 - 50%, 3 - 100% (mono)
-
-	//ADC
-	inout   [3:0] ADC_BUS,
-
-	//SD-SPI
-	output        SD_SCK,
-	output        SD_MOSI,
-	input         SD_MISO,
-	output        SD_CS,
-	input         SD_CD,
-
-	//High latency DDR3 RAM interface
-	//Use for non-critical time purposes
-	output        DDRAM_CLK,
-	input         DDRAM_BUSY,
-	output  [7:0] DDRAM_BURSTCNT,
-	output [28:0] DDRAM_ADDR,
-	input  [63:0] DDRAM_DOUT,
-	input         DDRAM_DOUT_READY,
-	output        DDRAM_RD,
-	output [63:0] DDRAM_DIN,
-	output  [7:0] DDRAM_BE,
-	output        DDRAM_WE,
-
-	//SDRAM interface with lower latency
-	output        SDRAM_CLK,
-	output        SDRAM_CKE,
-	output [12:0] SDRAM_A,
-	output  [1:0] SDRAM_BA,
 	inout  [15:0] SDRAM_DQ,
+	output [12:0] SDRAM_A,
 	output        SDRAM_DQML,
 	output        SDRAM_DQMH,
-	output        SDRAM_nCS,
+	output        SDRAM_nWE,
 	output        SDRAM_nCAS,
 	output        SDRAM_nRAS,
-	output        SDRAM_nWE,
+	output        SDRAM_nCS,
+	output  [1:0] SDRAM_BA,
+	output        SDRAM_CLK,
+	output        SDRAM_CKE,
 
-`ifdef MISTER_DUAL_SDRAM
-	//Secondary SDRAM
-	//Set all output SDRAM_* signals to Z ASAP if SDRAM2_EN is 0
-	input         SDRAM2_EN,
-	output        SDRAM2_CLK,
-	output [12:0] SDRAM2_A,
-	output  [1:0] SDRAM2_BA,
-	inout  [15:0] SDRAM2_DQ,
-	output        SDRAM2_nCS,
-	output        SDRAM2_nCAS,
-	output        SDRAM2_nRAS,
-	output        SDRAM2_nWE,
-`endif
+	output        SPI_DO,
+	input         SPI_DI,
+	input         SPI_SCK,
+	input         SPI_SS2,
+	input         SPI_SS3,
+	input         CONF_DATA0,
 
-	input         UART_CTS,
-	output        UART_RTS,
-	input         UART_RXD,
-	output        UART_TXD,
-	output        UART_DTR,
-	input         UART_DSR,
+	output        VGA_HS,
+	output        VGA_VS,
+	output  [5:0] VGA_R,
+	output  [5:0] VGA_G,
+	output  [5:0] VGA_B,
 
-	// Open-drain User port.
-	// 0 - D+/RX
-	// 1 - D-/TX
-	// 2..6 - USR2..USR6
-	// Set USER_OUT to 1 to read from USER_IN.
-	input   [6:0] USER_IN,
-	output  [6:0] USER_OUT,
+	output        AUDIO_L,
+	output        AUDIO_R, 
+	
+	output [15:0] DAC_L, 
+	output [15:0] DAC_R
+	
+//	input         TAPE_IN,
 
-	input         OSD_STATUS
 );
 
-///////// Default values for ports not used in this core /////////
-
-assign ADC_BUS  = 'Z;
-assign USER_OUT = '1;
-assign {UART_RTS, UART_TXD, UART_DTR} = 0;
-assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
 assign {SDRAM_DQ, SDRAM_A, SDRAM_BA, SDRAM_CLK, SDRAM_CKE, SDRAM_DQML, SDRAM_DQMH, SDRAM_nWE, SDRAM_nCAS, SDRAM_nRAS, SDRAM_nCS} = 'Z;
  
-assign VGA_F1 = 0;
-assign VGA_SCALER = 0;
-assign HDMI_FREEZE = 0;
+assign LED = ioctl_download;
 
-assign AUDIO_S = 0;
-assign AUDIO_MIX = 0;
 
-assign LED_USER = ioctl_download;
-
-assign LED_DISK = 0;
-assign LED_POWER = 0;
-assign BUTTONS = 0;
-
-//////////////////////////////////////////////////////////////////
-
-wire [1:0] ar = status[13:12];
-
-assign VIDEO_ARX = (!ar) ? 12'd4 : (ar - 1'd1);
-assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
-
-`include "build_id.v" 
-localparam CONF_STR = {
-	"Sord M5;;",
-	"-;",
+//`include "build_id.v" 
+parameter CONF_STR = {
+  "Sord M5;;",
+  "-;",
   "O02,Memory extension,None,EM-5,EM-64,64KBF,64KRX,BrnoMod;",
   "h0O34,Cartrige,None,BASIC-I,BASIC-G,BASIC-F;",
   "h1O5,EM64 mode,64KB,32KB;",
@@ -216,15 +81,14 @@ localparam CONF_STR = {
   "F2,CAS,Load Tape;",
   "O9,Fast Tape Load,On,Off;",
   "OA,Tape Sound,On,Off;",
-	"-;",
-	"-;",
-  "OCD,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
+  "-;",
+  //"OCD,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
   "OEF,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%;",
   "OG,Border,No,Yes;",
   "-;",
-	"TH,Reset;",
-	"RH,Reset and close OSD;",
-	"V,v",`BUILD_DATE 
+  "TH,Reset;",
+  "RH,Reset and close OSD;",
+  "V,v",`BUILD_DATE 
 };
 
 //wire forced_scandoubler;
@@ -243,25 +107,29 @@ wire        cart_enable = status[2:1] ==  2'b00 | status[2:0] == 3'b010;
 wire        binary_load_enable = cart_enable & status[4:3] == 2'b00;
 wire        kb64_enable = status[2:0] == 3'b010;
 
-hps_io #(.CONF_STR(CONF_STR)) hps_io
+mist_io #(.STRLEN($size(CONF_STR)>>3)) mist_io
 (
+	.SPI_SCK   (SPI_SCK),
+	.CONF_DATA0(CONF_DATA0),
+	.SPI_SS2   (SPI_SS2),
+	.SPI_DO    (SPI_DO),
+	.SPI_DI    (SPI_DI),
+ 
 	.clk_sys(clk_sys),
-	.HPS_BUS(HPS_BUS),
-	// .EXT_BUS(),
-	.gamma_bus(gamma_bus),
+	.conf_str(CONF_STR),
 
-	.forced_scandoubler(forced_scandoubler),
-
+	.scandoubler_disable(forced_scandoubler),
 	//.buttons(buttons),
 	.status(status),
-   .status_menumask({binary_load_enable,kb64_enable, cart_enable}),
 	.ps2_key(ps2_key), 
 	
+	.ioctl_ce(1),
 	.ioctl_wr(ioctl_wr),
 	.ioctl_addr(ioctl_addr),
 	.ioctl_dout(ioctl_dout),
 	.ioctl_download(ioctl_download),
 	.ioctl_index(ioctl_index)
+
 );
 
 ///////////////////////   CLOCKS   ///////////////////////////////
@@ -269,9 +137,9 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 wire clk_sys;
 pll pll
 (
-	.refclk(CLK_50M),
-	.rst(0),
-	.outclk_0(clk_sys)
+	.inclk0(CLOCK_27),
+	.c0(clk_sys),
+	.locked()
 );
 
 reg ce_10m7 = 0;
@@ -291,20 +159,27 @@ always @(posedge clk_sys) begin
 end
 
 wire ram_mode_changed = old_ram_mode == status[4:0] ? 1'b0 : 1'b1 ;
-wire reset = RESET | ram_mode_changed | buttons[1] | status[17] | (ioctl_index == 8'd1 & ioctl_download);
+wire reset = !RESET_N | ram_mode_changed | buttons[1] | status[17] | (ioctl_index == 8'd1 & ioctl_download);
 
 
 ////////////////  Console  ////////////////////////
 
 wire [10:0] audio;
-assign AUDIO_L = {audio,5'd0};
-assign AUDIO_R = {audio,5'd0};
+assign DAC_L = {audio,5'd0};
+assign DAC_R = {audio,5'd0};
+
+
+sigma_delta_dac sigma_delta_dac (
+	.clk      ( CLOCK_27     ),      // bus clock
+	.ldatasum ( DAC_L >> 1  ),      // left channel data		(ok1) sndmix >> 1 bad, (ok2) sndmix >> 2 ok
+	.rdatasum ( DAC_R >> 1  ),      // right channel data		sndmix_pcm >> 1 bad, sndmix_pcm >> 2 bad
+	.left     ( AUDIO_L     ),      // left bitstream output
+	.right    ( AUDIO_R     )       // right bitsteam output
+);
 
 wire [7:0] R,G,B;
 wire hblank, vblank;
 wire hsync, vsync;
-
-assign CLK_VIDEO = clk_sys;
 
 
 sordM5 SordM5
@@ -322,45 +197,53 @@ sordM5 SordM5
 	.hblank_o(hblank),
 	.vblank_o(vblank),
 	.audio_o(audio), 
-  .ps2_key_i(ps2_key),
-  .ioctl_addr (ioctl_addr),
-  .ioctl_dout (ioctl_dout),
-  .ioctl_index (ioctl_index),
-  .ioctl_wr (ioctl_wr),  
-  .ioctl_download (ioctl_download),
-  .DDRAM_BUSY ( DDRAM_BUSY),
-  .DDRAM_BURSTCNT ( DDRAM_BURSTCNT),
-  .DDRAM_ADDR ( DDRAM_ADDR),
-  .DDRAM_DOUT ( DDRAM_DOUT),
-  .DDRAM_DOUT_READY ( DDRAM_DOUT_READY),
-  .DDRAM_RD ( DDRAM_RD),
-  .DDRAM_DIN ( DDRAM_DIN),
-  .DDRAM_BE ( DDRAM_BE),
-  .DDRAM_WE ( DDRAM_WE),
-  .DDRAM_CLK ( DDRAM_CLK),
-  .casSpeed (status[9]),
-  .tape_sound_i (status[10]),
-  .ramMode_i (status[8:0])
+	.ps2_key_i(ps2_key),
+	.ioctl_addr (ioctl_addr),
+	.ioctl_dout (ioctl_dout),
+	.ioctl_index (ioctl_index),
+	.ioctl_wr (ioctl_wr),  
+	.ioctl_download (ioctl_download),
+	// .DDRAM_BUSY ( DDRAM_BUSY),
+	// .DDRAM_BURSTCNT ( DDRAM_BURSTCNT),
+	// .DDRAM_ADDR ( DDRAM_ADDR),
+	// .DDRAM_DOUT ( DDRAM_DOUT),
+	// .DDRAM_DOUT_READY ( DDRAM_DOUT_READY),
+	// .DDRAM_RD ( DDRAM_RD),
+	// .DDRAM_DIN ( DDRAM_DIN),
+	// .DDRAM_BE ( DDRAM_BE),
+	// .DDRAM_WE ( DDRAM_WE),
+	// .DDRAM_CLK ( DDRAM_CLK),
+	.casSpeed (status[9]),
+	.tape_sound_i (status[10]),
+	.ramMode_i (status[8:0])
 );
 
-assign VGA_SL = sl[1:0];
-
-wire [2:0] scale = status[15:14];
-wire [2:0] sl = scale ? scale - 1'd1 : 3'd0;
 
 reg hs_o, vs_o;
-always @(posedge CLK_VIDEO) begin
+always @(posedge clk_sys) begin
 	hs_o <= ~hsync;
 	if(~hs_o & ~hsync) vs_o <= ~vsync;
 end
 
-wire  freeze_sync;
-video_mixer #(.LINE_LENGTH(290), .GAMMA(1)) video_mixer
+wire [2:0] scale = status[15:14];
+
+video_mixer #(.LINE_LENGTH(290)) video_mixer
 (
-	.*,
+	
 	.ce_pix(ce_5m3),
-	.scandoubler(scale || forced_scandoubler),
+	.ce_pix_actual(ce_5m3),
+
+	.scandoubler_disable(forced_scandoubler),
 	.hq2x(scale==1),
+	.mono(0),
+	.scanlines(forced_scandoubler ? 2'b00 : {scale==3, scale==2}),
+	.ypbpr    (0),				
+    .ypbpr_full(0),
+    .line_start(0),
+
+	.R(R[7:2]),
+	.G(G[7:2]),
+	.B(B[7:2]),
 
 	// Positive pulses.
 	.HSync(hs_o),
