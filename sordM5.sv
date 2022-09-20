@@ -70,7 +70,7 @@ assign {SDRAM_DQ, SDRAM_A, SDRAM_BA, SDRAM_CLK, SDRAM_CKE, SDRAM_DQML, SDRAM_DQM
 assign LED = ioctl_download;
 
 
-//`include "build_id.v" 
+`include "build_id.v" 
 parameter CONF_STR = {
   "Sord M5;;",
   "-;",
@@ -95,8 +95,7 @@ parameter CONF_STR = {
   "V,v",`BUILD_DATE 
 };
 
-//wire forced_scandoubler;
-wire  [1:0] buttons;
+//wire  [1:0] buttons;
 wire [31:0] status;
 wire [10:0] ps2_key;
 
@@ -163,7 +162,7 @@ always @(posedge clk_sys) begin
 end
 
 wire ram_mode_changed = old_ram_mode == status[4:0] ? 1'b0 : 1'b1 ;
-wire reset = !RESET_N | ram_mode_changed | buttons[1] | status[17] | (ioctl_index == 8'd1 & ioctl_download);
+wire reset = !RESET_N | ram_mode_changed | status[17] | (ioctl_index == 8'd1 & ioctl_download);
 
 
 ////////////////  Console  ////////////////////////
@@ -238,7 +237,7 @@ wire [2:0] scale = status[15:14];
 
 video_mixer #(.LINE_LENGTH(290)) video_mixer
 (
-	
+	.*,
 	.ce_pix(ce_5m3),
 	.ce_pix_actual(ce_5m3),
 
@@ -259,6 +258,7 @@ video_mixer #(.LINE_LENGTH(290)) video_mixer
 	.VSync(vs_o),
 	.HBlank(hblank),
 	.VBlank(vblank)
+
 );
 
 endmodule

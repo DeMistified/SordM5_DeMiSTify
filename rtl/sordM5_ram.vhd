@@ -266,7 +266,7 @@ begin
    ROM : work.dpram
    generic map (
       addr_width => 17,
-      mem_init_file => "rtl/rom/rom.MIF"
+      mem_init_file => "rom/rom.MIF"
    )
    
    port map (   

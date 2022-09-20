@@ -8,7 +8,7 @@ module spram_sram #(parameter AW=18)
   output reg [7:0]    douta,
 
   output reg [20:0]   SRAM_ADDR,
-  inout      [15:0]    SRAM_DATA,
+  inout      [15:0]   SRAM_DATA,
   output reg          SRAM_WE_n
 );
 
@@ -25,7 +25,7 @@ always @(negedge clka)
 		end
 		else begin
 			SRAM_WE_n <= 1'b1;
-			douta <= SRAM_DATA;
+			douta <= SRAM_DATA[7:0];
 		end
 	end
 endmodule
