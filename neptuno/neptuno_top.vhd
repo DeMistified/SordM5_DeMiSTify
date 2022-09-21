@@ -280,9 +280,8 @@ begin
 			SRAM_A		=> SRAM_A,
 			SRAM_Q		=> SRAM_Q,
 			SRAM_WE		=> sram_we_x,
-			--UART
-			-- UART_TX  => open,
-			-- UART_RX  => AUDIO_INPUT,
+			--EAR
+			AUDIO_INPUT  => AUDIO_INPUT,
 			--SPI
 --			SPI_SD_DI  => sd_miso,
 			SPI_DO     => spi_fromguest,

@@ -55,6 +55,8 @@ module sordM5_guest
 	output  [5:0] VGA_G,
 	output  [5:0] VGA_B,
 
+	input 		  AUDIO_INPUT,
+
 	output        AUDIO_L,
 	output        AUDIO_R, 
 	
@@ -91,7 +93,6 @@ parameter CONF_STR = {
   "OG,Border,No,Yes;",
   "-;",
   "TH,Reset;",
-  "RH,Reset and close OSD;",
   "V,v",`BUILD_DATE 
 };
 
@@ -220,6 +221,8 @@ sordM5 SordM5
 	.SRAM_A(SRAM_A),
 	.SRAM_Q(SRAM_Q),
 	.SRAM_WE(SRAM_WE),
+
+	.AUDIO_INPUT(AUDIO_INPUT),
 
 	.casSpeed (status[9]),
 	.tape_sound_i (status[10]),

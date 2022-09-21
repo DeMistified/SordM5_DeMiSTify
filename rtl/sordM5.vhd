@@ -74,6 +74,8 @@ entity sordM5 is
     -- DDRAM_BE        : out std_logic_vector( 7 downto 0);
     -- DDRAM_WE        : out std_logic
 
+    AUDIO_INPUT : in std_logic;
+
     --SRAM
     SRAM_A			:	 OUT STD_LOGIC_VECTOR(20 DOWNTO 0);
     SRAM_Q			:	 INOUT STD_LOGIC_VECTOR(15 DOWNTO 0);
@@ -367,7 +369,10 @@ begin
       kb_d_i          => kb_do_s,
       kb_rst_i        => kb_rst_s,
       kb_ce_n_i       => kb_ce_n_s,
-      cas_ce_n_i      => cas_ce_n_s,
+
+--    cas_ce_n_i      => cas_ce_n_s,
+      cas_ce_n_i      => AUDIO_INPUT,
+
       ctc_ce_n_i      => ctc_ce_n_s,
       ctc_d_i         => d_from_ctc_s,
       int_vect_ce_n_i => int_vect_ce_n_s,
