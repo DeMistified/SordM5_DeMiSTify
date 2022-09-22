@@ -91,6 +91,7 @@ parameter CONF_STR = {
   //"OCD,Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
   "OEF,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%;",
   "OG,Border,No,Yes;",
+  "OI,Invert Tape Audio,No,Yes;",
   "-;",
   "TH,Reset;",
   "V,v",`BUILD_DATE 
@@ -222,12 +223,15 @@ sordM5 SordM5
 	.SRAM_Q(SRAM_Q),
 	.SRAM_WE(SRAM_WE),
 
-	.AUDIO_INPUT(AUDIO_INPUT),
+	.AUDIO_INPUT(invert ? ~AUDIO_INPUT : AUDIO_INPUT ),
 
 	.casSpeed (status[9]),
 	.tape_sound_i (status[10]),
 	.ramMode_i (status[8:0])
 );
+
+
+wire invert = status[18];
 
 
 reg hs_o, vs_o;
