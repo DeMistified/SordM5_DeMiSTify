@@ -369,14 +369,12 @@ begin
       kb_d_i          => kb_do_s,
       kb_rst_i        => kb_rst_s,
       kb_ce_n_i       => kb_ce_n_s,
-
---    cas_ce_n_i      => cas_ce_n_s,
-      cas_ce_n_i      => AUDIO_INPUT,
-
+      cas_ce_n_i      => cas_ce_n_s,
       ctc_ce_n_i      => ctc_ce_n_s,
       ctc_d_i         => d_from_ctc_s,
       int_vect_ce_n_i => int_vect_ce_n_s,
-      casOut_i        => casOut_s,
+--      casOut_i        => casOut_s,
+	  casOut_i			=> AUDIO_INPUT,
       rd_n_i          => rd_n_s,
       ram_d_i         => ram_d_s 
     );
